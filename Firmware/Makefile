@@ -15,14 +15,21 @@ ELF = $(PROGRAM_NAME).elf
 # BIN file
 BIN = $(PROGRAM_NAME).bin
 
+# MIF file
+MIF = $(PROGRAM_NAME).mif
+
 # Build
-all: $(ELF) $(BIN)
+all: $(ELF) $(BIN) $(MIF)
 
 $(ELF): $(SRCS)
 	$(TOOLCHAIN)gcc $(CFLAGS) -o $(ELF) $(SRCS) $(LDFLAGS)
 
 $(BIN): $(ELF)
 	$(TOOLCHAIN)objcopy -O binary $(ELF) $(BIN)
+	
+$(MIF): $(BIN)
+	python3 makehex.py $(BIN)
 
-
-
+# Clean
+clean:
+	rm -f $(ELF) $(BIN)
