@@ -1,0 +1,50 @@
+# do pico.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 22:24:57 on Aug 18,2023
+# vlog -work work pico.vo 
+# -- Compiling module pico
+# -- Compiling module hard_block
+# 
+# Top level modules:
+# 	pico
+# End time: 22:24:58 on Aug 18,2023, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 22:24:58 on Aug 18,2023
+# vlog -work work Waveform.vwf.vt 
+# -- Compiling module pico_vlg_vec_tst
+# 
+# Top level modules:
+# 	pico_vlg_vec_tst
+# End time: 22:24:58 on Aug 18,2023, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -c -t 1ps -L fiftyfivenm_ver -L altera_ver -L altera_mf_ver -L 220model_ver -L sgate_ver -L altera_lnsim_ver work.pico_vlg_vec_tst 
+# Start time: 22:24:58 on Aug 18,2023
+# Loading work.pico_vlg_vec_tst
+# Loading work.pico
+# Loading work.hard_block
+# Loading fiftyfivenm_ver.fiftyfivenm_io_obuf
+# Loading fiftyfivenm_ver.fiftyfivenm_io_ibuf
+# Loading fiftyfivenm_ver.fiftyfivenm_clkctrl
+# Loading fiftyfivenm_ver.fiftyfivenm_mux41
+# Loading fiftyfivenm_ver.fiftyfivenm_ena_reg
+# Loading altera_ver.dffeas
+# Loading fiftyfivenm_ver.fiftyfivenm_lcell_comb
+# Loading fiftyfivenm_ver.fiftyfivenm_ram_block
+# Loading fiftyfivenm_ver.fiftyfivenm_ram_register
+# Loading fiftyfivenm_ver.fiftyfivenm_ram_pulse_generator
+# Loading fiftyfivenm_ver.fiftyfivenm_unvm
+# Loading fiftyfivenm_ver.fiftyfivenm_adcblock
+# Loading altera_ver.PRIM_GDFF_LOW
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\~QUARTUS_CREATED_ADC1~ '.  Expected 8, found 7.
+#    Time: 0 ps  Iteration: 0  Instance: /pico_vlg_vec_tst/i1/\~QUARTUS_CREATED_ADC1~  File: pico.vo Line: 33482
+# ** Warning: (vsim-3722) pico.vo(33482): [TFMPC] - Missing connection for port 'clk_dft'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\~QUARTUS_CREATED_ADC2~ '.  Expected 8, found 7.
+#    Time: 0 ps  Iteration: 0  Instance: /pico_vlg_vec_tst/i1/\~QUARTUS_CREATED_ADC2~  File: pico.vo Line: 33505
+# ** Warning: (vsim-3722) pico.vo(33505): [TFMPC] - Missing connection for port 'clk_dft'.
+# after#26
+# ** Note: $finish    : Waveform.vwf.vt(57)
+#    Time: 10 us  Iteration: 0  Instance: /pico_vlg_vec_tst
+# End time: 22:24:58 on Aug 18,2023, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 4
