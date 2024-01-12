@@ -1,7 +1,7 @@
 import sys
 
 memory = []
-width = 32
+width = 8
 depth = 65536
 
 # Check if the correct number of arguments were provided
@@ -27,6 +27,8 @@ except FileNotFoundError:
 
 # Read the contents of the file
 binary_data = binary_file.read()
+
+# print(binary_data)
 
 # Display the binary data as hexadecimal
 for byte in binary_data:
@@ -60,12 +62,11 @@ for address in range(depth):
     word = ""
 
     if byte_count < len(memory):
-        for byte in range(width // 8):
-            word = word + memory[byte_count]
-            byte_count += 1
+        word = word + memory[byte_count]
+        byte_count += 1
 
     else:
-        word = "00000000"
+        word = "00"
 
     output_file.write(f"{address:04x}: {word};\n")
 
