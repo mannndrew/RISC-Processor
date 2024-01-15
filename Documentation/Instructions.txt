@@ -1,40 +1,49 @@
-1. ADDI: I-type
+1. ADDI: I-type [Add Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 000   | rd   | 0010011 |
+     x[rd] = x[rs1] + sext(immediate)
 
-2. ANDI: I-type
+2. ANDI: I-type [AND Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 111   | rd   | 0010011 |
+     x[rd] = x[rs1] & sext(immediate)
 
-3. ORI: I-type
+3. ORI: I-type [OR Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 110   | rd   | 0010011 |
+     x[rd] = x[rs1] | sext(immediate)
 
-4. XORI: I-type
+4. XORI: I-type [XOR Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 100   | rd   | 0010011 |
+     x[rd] = x[rs1] ^ sext(immediate)
 
-5. SLTI: I-type
+5. SLTI: I-type [Set Less than Signed Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 010   | rd   | 0010011 |
+     x[rd] = x[rs1] < signed sext(immediate)
 
-6. SLTIU: I-type
+6. SLTIU: I-type [Set Less than Unsigned Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 011   | rd   | 0010011 |
+     x[rd] = x[rs1] < unsigned sext(immediate)
 
 ---------------------------------------------------------------------
 
-7. SLLI: I-type (Specialized)
+7. SLLI: I-type (Specialized) [Logical Left Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | shamt | rs1   | 001   | rd   | 0010011 |
+     x[rd] = x[rs1] << shamt
 
-8. SRLI: I-type (Specialized)
+8. SRLI: I-type (Specialized) [Logical Right Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | shamt | rs1   | 101   | rd   | 0010011 |
+     x[rd] = x[rs1] >> unsigned shamt
 
-9. SRAI: I-type (Specialized)
+9. SRAI: I-type (Specialized) [Arithmetic Right Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0100000 | shamt | rs1   | 101   | rd   | 0010011 |
+     x[rd] = x[rs1] >> signed shamt
 
 ---------------------------------------------------------------------
 
