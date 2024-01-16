@@ -18,84 +18,96 @@
    | imm[11:0] | rs1   | 100   | rd   | 0010011 |
      x[rd] = x[rs1] ^ sext(immediate)
 
-5. SLTI: I-type [Set Less than Signed Immediate] {1 Cycle}
+5. SLTI: I-type [Set Less Than Signed Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 010   | rd   | 0010011 |
      x[rd] = x[rs1] < signed sext(immediate)
 
-6. SLTIU: I-type [Set Less than Unsigned Immediate] {1 Cycle}
+6. SLTIU: I-type [Set Less Than Unsigned Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 011   | rd   | 0010011 |
      x[rd] = x[rs1] < unsigned sext(immediate)
 
 ---------------------------------------------------------------------
 
-7. SLLI: I-type (Specialized) [Logical Left Shift] {1 Cycle}
+7. SLLI: I-type (Specialized) [Logical Left Shift Immediate] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | shamt | rs1   | 001   | rd   | 0010011 |
      x[rd] = x[rs1] << shamt
 
-8. SRLI: I-type (Specialized) [Logical Right Shift] {1 Cycle}
+8. SRLI: I-type (Specialized) [Logical Right Shift Immediate] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | shamt | rs1   | 101   | rd   | 0010011 |
      x[rd] = x[rs1] >> unsigned shamt
 
-9. SRAI: I-type (Specialized) [Arithmetic Right Shift] {1 Cycle}
+9. SRAI: I-type (Specialized) [Arithmetic Right Shift Immediate] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0100000 | shamt | rs1   | 101   | rd   | 0010011 |
      x[rd] = x[rs1] >> signed shamt
 
 ---------------------------------------------------------------------
 
-10. LUI: U-type
+10. LUI: U-type [Load Upper Immediate] {1 Cycle}
    | 31-12      | 11-7 | 6-0     |
    | imm[31:12] | rd   | 0110111 |
+     x[rd] = sext(immediate[31:12] << 12)
 
-11. AUIPC: U-type
+11. AUIPC: U-type [Add Upper Immediate to PC] {1 Cycle}
    | 31-12      | 11-7 | 6-0     |
    | imm[31:12] | rd   | 0010111 |
+     x[rd] = pc + sext(immediate[31:12] << 12)
 
 ---------------------------------------------------------------------
 
-12. ADD: R-type
+12. ADD: R-type [Add] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 000   | rd   | 0110011 |
+     x[rd] = x[rs1] + x[rs2]
 
-13. SUB: R-type
+13. SUB: R-type [Subtract] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0100000 | rs2   | rs1   | 000   | rd   | 0110011 |
+     x[rd] = x[rs1] - x[rs2]
 
-14. AND: R-type
+14. AND: R-type [AND] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 111   | rd   | 0110011 |
+     x[rd] = x[rs1] & x[rs2]
 
-15. OR: R-type
+15. OR: R-type [OR] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 110   | rd   | 0110011 |
+     x[rd] = x[rs1] | x[rs2]
 
-16. XOR: R-type
+16. XOR: R-type [XOR] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 100   | rd   | 0110011 |
+     x[rd] = x[rs1] ^ x[rs2]
 
-17. SLT: R-type
+17. SLT: R-type [Set Less Than Signed] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 010   | rd   | 0110011 |
+     x[rd] = x[rs1] < signed x[rs2]
 
-18. SLTU: R-type
+18. SLTU: R-type [Set Less Than Unsigned] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 011   | rd   | 0110011 |
+     x[rd] = x[rs1] < unsigned x[rs2]
 
-19. SLL: R-type
+19. SLL: R-type [Logical Left Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 001   | rd   | 0110011 |
+     x[rd] = x[rs1] << x[rs2]
 
-20. SRL: R-type
+20. SRL: R-type [Logical Right Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 101   | rd   | 0110011 |
+     x[rd] = x[rs1] >> unsigned x[rs2]
 
-21. SRA: R-type
+21. SRA: R-type [Arithmetic Right Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0100000 | rs2   | rs1   | 101   | rd   | 0110011 |
+     x[rd] = x[rs1] >> signed x[rs2]
 
 ---------------------------------------------------------------------
 
