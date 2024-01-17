@@ -2,31 +2,43 @@
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 000   | rd   | 0010011 |
      x[rd] = x[rs1] + sext(immediate)
+     In: Reg & Imm
+     Out: Reg
 
 2. ANDI: I-type [AND Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 111   | rd   | 0010011 |
      x[rd] = x[rs1] & sext(immediate)
+     In: Reg & Imm
+     Out: Reg
 
 3. ORI: I-type [OR Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 110   | rd   | 0010011 |
      x[rd] = x[rs1] | sext(immediate)
+     In: Reg & Imm
+     Out: Reg
 
 4. XORI: I-type [XOR Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 100   | rd   | 0010011 |
      x[rd] = x[rs1] ^ sext(immediate)
+     In: Reg & Imm
+     Out: Reg
 
 5. SLTI: I-type [Set Less Than Signed Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 010   | rd   | 0010011 |
      x[rd] = x[rs1] < signed sext(immediate)
+     In: Reg & Imm
+     Out: Reg
 
 6. SLTIU: I-type [Set Less Than Unsigned Immediate] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 011   | rd   | 0010011 |
      x[rd] = x[rs1] < unsigned sext(immediate)
+     In: Reg & Imm
+     Out: Reg
 
 ---------------------------------------------------------------------
 
@@ -34,16 +46,22 @@
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | shamt | rs1   | 001   | rd   | 0010011 |
      x[rd] = x[rs1] << shamt
+     In: Reg & Imm
+     Out: Reg
 
 8. SRLI: I-type (Specialized) [Logical Right Shift Immediate] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | shamt | rs1   | 101   | rd   | 0010011 |
      x[rd] = x[rs1] >> unsigned shamt
+     In: Reg & Imm
+     Out: Reg
 
 9. SRAI: I-type (Specialized) [Arithmetic Right Shift Immediate] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0100000 | shamt | rs1   | 101   | rd   | 0010011 |
      x[rd] = x[rs1] >> signed shamt
+     In: Reg & Imm
+     Out: Reg
 
 ---------------------------------------------------------------------
 
@@ -51,11 +69,15 @@
    | 31-12      | 11-7 | 6-0     |
    | imm[31:12] | rd   | 0110111 |
      x[rd] = sext(immediate[31:12] << 12)
+     In: Imm
+     Out: Reg
 
 11. AUIPC: U-type [Add Upper Immediate to PC] {1 Cycle}
    | 31-12      | 11-7 | 6-0     |
    | imm[31:12] | rd   | 0010111 |
      x[rd] = pc + sext(immediate[31:12] << 12)
+     In: PC & Imm
+     Out: PC
 
 ---------------------------------------------------------------------
 
@@ -63,51 +85,71 @@
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 000   | rd   | 0110011 |
      x[rd] = x[rs1] + x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 13. SUB: R-type [Subtract] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0100000 | rs2   | rs1   | 000   | rd   | 0110011 |
      x[rd] = x[rs1] - x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 14. AND: R-type [AND] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 111   | rd   | 0110011 |
      x[rd] = x[rs1] & x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 15. OR: R-type [OR] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 110   | rd   | 0110011 |
      x[rd] = x[rs1] | x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 16. XOR: R-type [XOR] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 100   | rd   | 0110011 |
      x[rd] = x[rs1] ^ x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 17. SLT: R-type [Set Less Than Signed] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 010   | rd   | 0110011 |
      x[rd] = x[rs1] < signed x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 18. SLTU: R-type [Set Less Than Unsigned] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 011   | rd   | 0110011 |
      x[rd] = x[rs1] < unsigned x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 19. SLL: R-type [Logical Left Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 001   | rd   | 0110011 |
      x[rd] = x[rs1] << x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 20. SRL: R-type [Logical Right Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0000000 | rs2   | rs1   | 101   | rd   | 0110011 |
      x[rd] = x[rs1] >> unsigned x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 21. SRA: R-type [Arithmetic Right Shift] {1 Cycle}
    | 31-25   | 24-20 | 19-15 | 14-12 | 11-7 | 6-0     |
    | 0100000 | rs2   | rs1   | 101   | rd   | 0110011 |
      x[rd] = x[rs1] >> signed x[rs2]
+     In: Reg & Reg
+     Out: Reg
 
 ---------------------------------------------------------------------
 
@@ -115,11 +157,15 @@
    | 31-12                    | 11-7 | 6-0     |
    | offset[20|10:1|11|19:12] | rd   | 1101111 |
      x[rd] = pc+4; pc += sext(offset)
+     In: PC, PC & IMM
+     Out: Reg, PC
 
 23. JALR: I-type [Jump and Link Register] {1 Cycle}
    | 31-20     | 19-15 | 14-12 | 11-7 | 6-0     |
    | imm[11:0] | rs1   | 000   | rd   | 1100111 |
      t =pc+4; pc=(x[rs1]+sext(offset))&∼1; x[rd]=t
+     In: PC, Reg & IMM
+     Out: Reg, PC
 
 ---------------------------------------------------------------------
 
@@ -127,31 +173,43 @@
    | 31-25        | 24-20 | 19-15 | 14-12 | 11-7        | 6-0     |
    | imm[12|10:5] | rs2   | rs1   | 000   | imm[4:1|11] | 1100011 |
      if (x[rs1] == x[rs2]) pc += sext(offset)
+     In: Reg & Reg, PC & IMM
+     Out: PC
 
 25. BNE: B-type [Branch if Not Equal] {1 Cycle}
    | 31-25        | 24-20 | 19-15 | 14-12 | 11-7        | 6-0     |
    | imm[12|10:5] | rs2   | rs1   | 001   | imm[4:1|11] | 1100011 |
      if (x[rs1] != x[rs2]) pc += sext(offset)
+     In: Reg & Reg, PC & IMM
+     Out: PC
 
 26. BLT: B-type [Branch if Less Than Signed] {1 Cycle}
    | 31-25        | 24-20 | 19-15 | 14-12 | 11-7        | 6-0     |
    | imm[12|10:5] | rs2   | rs1   | 100   | imm[4:1|11] | 1100011 |
      if (x[rs1] < signed x[rs2]) pc += sext(offset)
+     In: Reg & Reg, PC & IMM
+     Out: PC
 
 27. BLTU: B-type [Branch if Less Than Unsigned] {1 Cycle}
    | 31-25        | 24-20 | 19-15 | 14-12 | 11-7        | 6-0     |
    | imm[12|10:5] | rs2   | rs1   | 110   | imm[4:1|11] | 1100011 |
      if (x[rs1] < unsigned x[rs2]) pc += sext(offset)
+     In: Reg & Reg, PC & IMM
+     Out: PC
 
 28. BGE: B-type [Branch if Greater or Equal Than Signed] {1 Cycle}
    | 31-25        | 24-20 | 19-15 | 14-12 | 11-7        | 6-0     |
    | imm[12|10:5] | rs2   | rs1   | 101   | imm[4:1|11] | 1100011 |
      if (x[rs1] >= signed x[rs2]) pc += sext(offset)
+     In: Reg & Reg, PC & IMM
+     Out: PC
 
 29. BGEU: B-type [Branch if Greater or Equal Than Unsigned] {1 Cycle}
    | 31-25        | 24-20 | 19-15 | 14-12 | 11-7        | 6-0     |
    | imm[12|10:5] | rs2   | rs1   | 111   | imm[4:1|11] | 1100011 |
      if (x[rs1] >= unsigned x[rs2]) pc += sext(offset)
+     In: Reg & Reg, PC & IMM
+     Out: PC
 
 ---------------------------------------------------------------------
 
