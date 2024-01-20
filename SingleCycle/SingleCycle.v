@@ -9,7 +9,7 @@ module SingleCycle
 wire debounced;
 wire [31:0] pc_address;
 
-debounce SW
+debounce DEB
 (
 	.clk(clk),
 	.rst(rst),
@@ -24,11 +24,20 @@ pccounter PC
 	.pc_address(pc_address)
 );
 
-instruction_memory BlockRAM_1
+instruction_memory BR1
 (
 	.address(pc_address >> 2),
 	.clock(clk),
 	.q(led[7:0])
+);
+
+decoder DEC
+(
+	.instruction(),
+	.imm(),
+	.rs1(),
+	.alu_opcode(),
+	.rd()
 );
 
 

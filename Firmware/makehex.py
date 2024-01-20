@@ -1,8 +1,17 @@
 import sys
+import os
 
 memory = []
-width = 8
-depth = 65536
+
+instruction_width = 32
+instruction_origin = 0x0000_0000
+instruction_length = 1024
+instruction_depth = 256
+
+data_width = 32
+data_origin = 0x0000_0100
+data_length = 1024
+data_depth = 256
 
 # Check if the correct number of arguments were provided
 if len(sys.argv) != 2:
@@ -28,7 +37,7 @@ except FileNotFoundError:
 # Read the contents of the file
 binary_data = binary_file.read()
 
-# print(binary_data)
+
 
 # Display the binary data as hexadecimal
 for byte in binary_data:
@@ -38,37 +47,79 @@ for byte in binary_data:
     byte = str.upper(byte)
     memory.append(byte)
 
+print(memory)
+
 # Close the binary file
 binary_file.close()
 
 
-
+# Create folder
+if not os.path.exists("output"):
+    # Create the folder if it doesn't exist
+    os.makedirs("output")
 
 # Open the output file in write mode
-file_path = file_name[:-4] + ".mif"
+file_path = "output/instruction_file" + ".mif"
 output_file = open(file_path, "w")
 
 # Write the MIF header
-output_file.write(f"DEPTH = {depth};\n")
-output_file.write(f"WIDTH = {width};\n")
+output_file.write(f"DEPTH = {instruction_depth};\n")
+output_file.write(f"WIDTH = {instruction_width};\n")
 output_file.write(f"ADDRESS_RADIX = HEX;\n")
 output_file.write(f"DATA_RADIX = HEX;\n")
 output_file.write(f"CONTENT\n")
 output_file.write(f"BEGIN\n")
 
 # Write the contents of the memory
-byte_count = 0
-for address in range(depth):
+for address in range(instruction_depth):
     word = ""
 
-    if byte_count < len(memory):
-        word = word + memory[byte_count]
-        byte_count += 1
+    for byte in range(4):
+        if memory:
+            word = memory[0] + word
+            memory.pop(0)
 
-    else:
-        word = "00"
+        else:
+            word = "00" + word
 
-    output_file.write(f"{address:04x}: {word};\n")
+    output_file.write(f"{address:02x}: {word};\n")
+
+# Write the MIF footer
+output_file.write(f"END;")
+
+# Close the output file
+output_file.close()
+
+
+
+
+
+
+# Open the output file in write mode
+file_path = "output/data_file" + ".mif"
+output_file = open(file_path, "w")
+
+# Write the MIF header
+output_file.write(f"DEPTH = {data_depth};\n")
+output_file.write(f"WIDTH = {data_width};\n")
+output_file.write(f"ADDRESS_RADIX = HEX;\n")
+output_file.write(f"DATA_RADIX = HEX;\n")
+output_file.write(f"CONTENT\n")
+output_file.write(f"BEGIN\n")
+
+# Write the contents of the memory
+for address in range(data_depth):
+    word = ""
+
+    for byte in range(4):
+        if memory:
+            word = memory[0] + word
+            memory.pop(0)
+
+        else:
+            word = "00" + word
+
+    output_file.write(f"{address:02x}: {word};\n")
 
 # Write the MIF footer
 output_file.write(f"END;")

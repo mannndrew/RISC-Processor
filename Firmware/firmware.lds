@@ -1,7 +1,7 @@
 MEMORY
 {
-    instructions (rx) : ORIGIN = 0x00000000, LENGTH = 1K
-	data (rwx) : ORIGIN = 0x00000100, LENGTH = 1K
+    instructions (rx) : ORIGIN = 0x00000000, LENGTH = 8K
+	data (rwx) : ORIGIN = 0x00000400, LENGTH = 8K
 }
 
 SECTIONS
