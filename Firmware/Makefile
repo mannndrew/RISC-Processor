@@ -2,7 +2,7 @@
 
 # Compiler and Flags
 PROGRAM_NAME = firmware
-TOOLCHAIN = /home/mannndrew/riscv/bin/riscv64-unknown-elf-
+TOOLCHAIN = riscv64-unknown-elf-
 CFLAGS = -march=rv32i -mabi=ilp32 -Os -ffreestanding -nostdlib --std=gnu99
 LDFLAGS = -Wl,-Bstatic,-T,$(PROGRAM_NAME).lds,-Map,firmware.map,--strip-debug -lgcc
 
@@ -18,6 +18,9 @@ BIN = $(PROGRAM_NAME).bin
 # MIF file
 MIF = $(PROGRAM_NAME).mif
 
+# MAP file
+MAP = $(PROGRAM_NAME).map
+
 # Build
 all: $(ELF) $(BIN) $(MIF)
 
@@ -32,4 +35,4 @@ $(MIF): $(BIN)
 
 # Clean
 clean:
-	rm -f $(ELF) $(BIN)
+	rm -f $(ELF) $(BIN) $(MAP)
