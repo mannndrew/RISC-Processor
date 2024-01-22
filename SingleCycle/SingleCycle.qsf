@@ -88,4 +88,6 @@ set_global_assignment -name VERILOG_FILE SingleCycle.v
 set_global_assignment -name VERILOG_FILE decoder.v
 set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform.vwf
 set_global_assignment -name VECTOR_WAVEFORM_FILE ADDI.vwf
+set_global_assignment -name VECTOR_WAVEFORM_FILE Waveforms/ADDI.vwf
+set_global_assignment -name VECTOR_WAVEFORM_FILE Waveforms/LUI.vwf
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

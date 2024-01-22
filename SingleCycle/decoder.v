@@ -43,8 +43,11 @@ wire [4:0] opcode = instr[6:2];
 wire [2:0] funct3 = instr[14:12];
 wire [6:0] funct7 = instr[31:25];
 
-assign rs1 = instr[19:15];
+assign rs1 = (opcode == OP_LUI) ? 5'b00000 : instr[19:15];
 assign rs2 = instr[24:20];
+
+reg [3:0] alu_op_imm;
+reg [3:0] alu_op_reg;
 
 always @(*) begin
 
@@ -57,16 +60,36 @@ always @(*) begin
 		default: imm = {{20{instr[31]}}, instr[31:20]}; // I-type, R-type
 	endcase
 	
-	// alu_op
+	// alu_op_imm
 	case (funct3)
-		FUNC_ADD_SUB: alu_op = (opcode == OP_REG && funct7[5]) ? ALUOP_SUB : ALUOP_ADD;
-		FUNC_SLL: alu_op = ALUOP_SLL;
-		FUNC_SLT: alu_op = ALUOP_SLT;
-		FUNC_SLTI: alu_op = ALUOP_SLTU;
-		FUNC_XOR: alu_op = ALUOP_XOR;
-		FUNC_SRL_SRA: alu_op = (funct7[5]) ? ALUOP_SRA : ALUOP_SRL;
-		FUNC_OR: alu_op = ALUOP_OR;
-		FUNC_AND: alu_op = ALUOP_AND;
+		FUNC_ADD_SUB: alu_op_imm = ALUOP_ADD;
+		FUNC_SLL: alu_op_imm = ALUOP_SLL;
+		FUNC_SLT: alu_op_imm = ALUOP_SLT;
+		FUNC_SLTI: alu_op_imm = ALUOP_SLTU;
+		FUNC_XOR: alu_op_imm = ALUOP_XOR;
+		FUNC_SRL_SRA: alu_op_imm = (funct7[5]) ? ALUOP_SRA : ALUOP_SRL;
+		FUNC_OR: alu_op_imm = ALUOP_OR;
+		FUNC_AND: alu_op_imm = ALUOP_AND;
+		default: alu_op_imm = ALUOP_ADD;
+	endcase
+	
+	// alu_op_reg
+	case (funct3)
+		FUNC_ADD_SUB: alu_op_reg = (funct7[5]) ? ALUOP_SUB : ALUOP_ADD;
+		FUNC_SLL: alu_op_reg = ALUOP_SLL;
+		FUNC_SLT: alu_op_reg = ALUOP_SLT;
+		FUNC_SLTI: alu_op_reg = ALUOP_SLTU;
+		FUNC_XOR: alu_op_reg = ALUOP_XOR;
+		FUNC_SRL_SRA: alu_op_reg = (funct7[5]) ? ALUOP_SRA : ALUOP_SRL;
+		FUNC_OR: alu_op_reg = ALUOP_OR;
+		FUNC_AND: alu_op_reg = ALUOP_AND;
+		default: alu_op_reg = ALUOP_ADD;
+	endcase
+	
+	// alu_op
+	case (opcode)
+		OP_IMM: alu_op = alu_op_imm;
+		OP_REG: alu_op = alu_op_reg;
 		default: alu_op = ALUOP_ADD;
 	endcase
 	
