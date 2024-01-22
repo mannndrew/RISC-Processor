@@ -1,10 +1,14 @@
 module decoder
 (
+	// Inputs
 	input [31:0] instr,
+	
+	// Outputs
 	output reg [31:0] imm,
 	output [4:0] rs1,
 	output [4:0] rs2,
-	output reg [3:0] alu_op,
+	output reg alumux1,
+	output reg [3:0] aluop,
 	output reg [4:0] rd
 );
 
@@ -27,6 +31,9 @@ parameter FUNC_SRL_SRA  = 3'b101;
 parameter FUNC_OR  = 3'b110;
 parameter FUNC_AND  = 3'b111;
 
+parameter MUX_ALU_S1_RS1 = 1'b0;
+parameter MUX_ALU_S1_PC = 1'b1;
+
 parameter ALUOP_ADD  = 4'b0000;
 parameter ALUOP_SUB  = 4'b0001;
 parameter ALUOP_AND  = 4'b0010;
@@ -38,7 +45,6 @@ parameter ALUOP_SLL  = 4'b0111;
 parameter ALUOP_SRL  = 4'b1000;
 parameter ALUOP_SRA  = 4'b1001;
 
-
 wire [4:0] opcode = instr[6:2];
 wire [2:0] funct3 = instr[14:12];
 wire [6:0] funct7 = instr[31:25];
@@ -46,8 +52,8 @@ wire [6:0] funct7 = instr[31:25];
 assign rs1 = (opcode == OP_LUI) ? 5'b00000 : instr[19:15];
 assign rs2 = instr[24:20];
 
-reg [3:0] alu_op_imm;
-reg [3:0] alu_op_reg;
+reg [3:0] aluop_imm;
+reg [3:0] aluop_reg;
 
 always @(*) begin
 
@@ -60,37 +66,43 @@ always @(*) begin
 		default: imm = {{20{instr[31]}}, instr[31:20]}; // I-type, R-type
 	endcase
 	
-	// alu_op_imm
-	case (funct3)
-		FUNC_ADD_SUB: alu_op_imm = ALUOP_ADD;
-		FUNC_SLL: alu_op_imm = ALUOP_SLL;
-		FUNC_SLT: alu_op_imm = ALUOP_SLT;
-		FUNC_SLTI: alu_op_imm = ALUOP_SLTU;
-		FUNC_XOR: alu_op_imm = ALUOP_XOR;
-		FUNC_SRL_SRA: alu_op_imm = (funct7[5]) ? ALUOP_SRA : ALUOP_SRL;
-		FUNC_OR: alu_op_imm = ALUOP_OR;
-		FUNC_AND: alu_op_imm = ALUOP_AND;
-		default: alu_op_imm = ALUOP_ADD;
+	// alumux1
+	case (opcode)
+		OP_AUIPC: alumux1 = MUX_ALU_S1_PC;
+		default: alumux1 = MUX_ALU_S1_RS1;
 	endcase
 	
-	// alu_op_reg
+	// aluop_imm
 	case (funct3)
-		FUNC_ADD_SUB: alu_op_reg = (funct7[5]) ? ALUOP_SUB : ALUOP_ADD;
-		FUNC_SLL: alu_op_reg = ALUOP_SLL;
-		FUNC_SLT: alu_op_reg = ALUOP_SLT;
-		FUNC_SLTI: alu_op_reg = ALUOP_SLTU;
-		FUNC_XOR: alu_op_reg = ALUOP_XOR;
-		FUNC_SRL_SRA: alu_op_reg = (funct7[5]) ? ALUOP_SRA : ALUOP_SRL;
-		FUNC_OR: alu_op_reg = ALUOP_OR;
-		FUNC_AND: alu_op_reg = ALUOP_AND;
-		default: alu_op_reg = ALUOP_ADD;
+		FUNC_ADD_SUB: aluop_imm = ALUOP_ADD;
+		FUNC_SLL: aluop_imm = ALUOP_SLL;
+		FUNC_SLT: aluop_imm = ALUOP_SLT;
+		FUNC_SLTI: aluop_imm = ALUOP_SLTU;
+		FUNC_XOR: aluop_imm = ALUOP_XOR;
+		FUNC_SRL_SRA: aluop_imm = (funct7[5]) ? ALUOP_SRA : ALUOP_SRL;
+		FUNC_OR: aluop_imm = ALUOP_OR;
+		FUNC_AND: aluop_imm = ALUOP_AND;
+		default: aluop_imm = ALUOP_ADD;
+	endcase
+	
+	// aluop_reg
+	case (funct3)
+		FUNC_ADD_SUB: aluop_reg = (funct7[5]) ? ALUOP_SUB : ALUOP_ADD;
+		FUNC_SLL: aluop_reg = ALUOP_SLL;
+		FUNC_SLT: aluop_reg = ALUOP_SLT;
+		FUNC_SLTI: aluop_reg = ALUOP_SLTU;
+		FUNC_XOR: aluop_reg = ALUOP_XOR;
+		FUNC_SRL_SRA: aluop_reg = (funct7[5]) ? ALUOP_SRA : ALUOP_SRL;
+		FUNC_OR: aluop_reg = ALUOP_OR;
+		FUNC_AND: aluop_reg = ALUOP_AND;
+		default: aluop_reg = ALUOP_ADD;
 	endcase
 	
 	// alu_op
 	case (opcode)
-		OP_IMM: alu_op = alu_op_imm;
-		OP_REG: alu_op = alu_op_reg;
-		default: alu_op = ALUOP_ADD;
+		OP_IMM: aluop = aluop_imm;
+		OP_REG: aluop = aluop_reg;
+		default: aluop = ALUOP_ADD;
 	endcase
 	
 	// rd
