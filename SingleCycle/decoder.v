@@ -8,6 +8,7 @@ module decoder
 	output [4:0] rs1,
 	output [4:0] rs2,
 	output reg alumux1,
+	output reg alumux2,
 	output reg [3:0] aluop,
 	output reg [4:0] rd
 );
@@ -33,6 +34,9 @@ parameter FUNC_AND  = 3'b111;
 
 parameter MUX_ALU_S1_RS1 = 1'b0;
 parameter MUX_ALU_S1_PC = 1'b1;
+
+parameter MUX_ALU_S2_RS2 = 1'b0;
+parameter MUX_ALU_S2_IMM = 1'b1;
 
 parameter ALUOP_ADD  = 4'b0000;
 parameter ALUOP_SUB  = 4'b0001;
@@ -70,6 +74,12 @@ always @(*) begin
 	case (opcode)
 		OP_AUIPC: alumux1 = MUX_ALU_S1_PC;
 		default: alumux1 = MUX_ALU_S1_RS1;
+	endcase
+	
+	// alumux2
+	case (opcode)
+		OP_REG: alumux2 = MUX_ALU_S2_RS2;
+		default: alumux2 = MUX_ALU_S2_IMM;
 	endcase
 	
 	// aluop_imm

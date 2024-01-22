@@ -32,6 +32,7 @@ wire [31:0] dec_imm;
 wire [4:0] dec_rs1;
 wire [4:0] dec_rs2;
 wire dec_alumux1;
+wire dec_alumux2;
 wire [3:0] dec_aluop;
 wire [4:0] dec_rd;
 
@@ -59,6 +60,7 @@ decoder DEC
 	.rs1(dec_rs1),
 	.rs2(dec_rs2),
 	.alumux1(dec_alumux1),
+	.alumux2(dec_alumux2),
 	.aluop(dec_aluop),
 	.rd(dec_rd)
 );
@@ -70,16 +72,16 @@ regfile REG
 	.write_addr(dec_rd),
 	.write_data(alu_result),
 	.read_addr_1(dec_rs1),
-	.read_addr_2(),
+	.read_addr_2(dec_rs2),
 	
 	// Outputs
 	.read_data_1(reg_rs1),
-	.read_data_2(),
+	.read_data_2(reg_rs2),
 	.reg1_data(reg1_output)
 );
 
 assign alu_dataS1 = (dec_alumux1) ? pc_address : reg_rs1;
-assign alu_dataS2 = dec_imm;
+assign alu_dataS2 = (dec_alumux2) ? dec_imm : reg_rs2;
 
 alu LU
 (
