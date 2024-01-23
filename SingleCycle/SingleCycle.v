@@ -28,6 +28,8 @@ module SingleCycle
 //	.q(instr)
 //);
 
+wire [31:0] pc_in;
+
 wire [31:0] dec_imm;
 wire [4:0] dec_rs1;
 wire [4:0] dec_rs2;
@@ -43,11 +45,14 @@ wire [31:0] alu_dataS1;
 wire [31:0] alu_dataS2;
 wire [31:0] alu_result;
 
+assign pc_in = 3'b100;
+
 pccounter PC
 (
 	.clk(clk),
 	.rst(rst),
-	.pc_address(pc_address)
+	.pc_in(pc_in),
+	.pc_out(pc_address)
 );
 
 decoder DEC

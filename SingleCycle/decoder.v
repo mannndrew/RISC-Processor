@@ -72,7 +72,7 @@ always @(*) begin
 	
 	// alumux1
 	case (opcode)
-		OP_AUIPC: alumux1 = MUX_ALU_S1_PC;
+		OP_AUIPC, OP_JAL: alumux1 = MUX_ALU_S1_PC;
 		default: alumux1 = MUX_ALU_S1_RS1;
 	endcase
 	
