@@ -30,6 +30,7 @@ module SingleCycle
 
 wire [31:0] pc_in;
 wire [31:0] pc_next;
+wire branch;
 
 wire [31:0] dec_imm;
 wire [4:0] dec_rs1;
@@ -38,6 +39,7 @@ wire dec_pcmux;
 wire dec_regmux;
 wire dec_alumux1;
 wire dec_alumux2;
+wire [3:0] dec_branchop;
 wire [3:0] dec_aluop;
 wire [4:0] dec_rd;
 
@@ -49,7 +51,7 @@ wire [31:0] alu_dataS1;
 wire [31:0] alu_dataS2;
 wire [31:0] alu_result;
 
-assign pc_in = (dec_pcmux) ? alu_result : pc_next;
+assign pc_in = (dec_pcmux || branch) ? alu_result : pc_next;
 
 pccounter pgcounter_unit
 (
@@ -73,8 +75,17 @@ decoder decoder_unit
 	.regmux(dec_regmux),
 	.alumux1(dec_alumux1),
 	.alumux2(dec_alumux2),
+	.branchop(dec_branchop),
 	.aluop(dec_aluop),
 	.rd(dec_rd)
+);
+
+branch branch_unit
+(
+	.dataS1(reg_rs1),
+	.dataS2(reg_rs2),
+	.branchop(dec_branchop),
+	.branch(branch)
 );
 
 assign reg_in = (dec_regmux) ? pc_next : alu_result;

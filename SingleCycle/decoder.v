@@ -11,6 +11,7 @@ module decoder
 	output reg regmux,
 	output reg alumux1,
 	output reg alumux2,
+	output [4:0] branchop,
 	output reg [3:0] aluop,
 	output reg [4:0] rd
 );
@@ -63,6 +64,7 @@ wire [6:0] funct7 = instr[31:25];
 
 assign rs1 = (opcode == OP_LUI) ? 5'b00000 : instr[19:15];
 assign rs2 = instr[24:20];
+assign branchop = {(opcode == OP_BRANCH), instr[14:12]};
 
 reg [3:0] aluop_imm;
 reg [3:0] aluop_reg;
@@ -92,7 +94,7 @@ always @(*) begin
 	
 	// alumux1
 	case (opcode)
-		OP_AUIPC, OP_JAL: alumux1 = MUX_ALU_S1_PC;
+		OP_AUIPC, OP_JAL, OP_BRANCH: alumux1 = MUX_ALU_S1_PC;
 		default: alumux1 = MUX_ALU_S1_RS1;
 	endcase
 	
