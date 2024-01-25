@@ -51,7 +51,7 @@ wire [31:0] alu_result;
 
 assign pc_in = (dec_pcmux) ? alu_result : pc_next;
 
-pccounter PC
+pccounter prcounter_unit
 (
 	.clk(clk),
 	.rst(rst),
@@ -60,7 +60,7 @@ pccounter PC
 	.pc_out(pc_address)
 );
 
-decoder DEC
+decoder decoder_unit
 (
 	// Inputs
 	.instr(instr),
@@ -79,7 +79,7 @@ decoder DEC
 
 assign reg_in = (dec_regmux) ? pc_next : alu_result;
 
-regfile REG
+regfile register_unit
 (
 	// Inputs
 	.clk(clk),
@@ -97,7 +97,7 @@ regfile REG
 assign alu_dataS1 = (dec_alumux1) ? pc_address : reg_rs1;
 assign alu_dataS2 = (dec_alumux2) ? dec_imm : reg_rs2;
 
-alu LU
+alu arithmetic_unit
 (
 	// Inputs
 	.dataS1(alu_dataS1),
