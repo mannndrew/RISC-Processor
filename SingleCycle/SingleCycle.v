@@ -51,7 +51,7 @@ wire [31:0] alu_result;
 
 assign pc_in = (dec_pcmux) ? alu_result : pc_next;
 
-pccounter prcounter_unit
+pccounter pgcounter_unit
 (
 	.clk(clk),
 	.rst(rst),
