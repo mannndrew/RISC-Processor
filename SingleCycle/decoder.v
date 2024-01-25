@@ -7,6 +7,8 @@ module decoder
 	output reg [31:0] imm,
 	output [4:0] rs1,
 	output [4:0] rs2,
+	output reg pcmux,
+	output reg regmux,
 	output reg alumux1,
 	output reg alumux2,
 	output reg [3:0] aluop,
@@ -49,6 +51,12 @@ parameter ALUOP_SLL  = 4'b0111;
 parameter ALUOP_SRL  = 4'b1000;
 parameter ALUOP_SRA  = 4'b1001;
 
+parameter MUX_REG_WRITE_ALU = 1'b0;
+parameter MUX_REG_WRITE_PC = 1'b1;
+
+parameter MUX_PC_NEXT = 1'b0;
+parameter MUX_PC_ALU = 1'b1;
+
 wire [4:0] opcode = instr[6:2];
 wire [2:0] funct3 = instr[14:12];
 wire [6:0] funct7 = instr[31:25];
@@ -68,6 +76,18 @@ always @(*) begin
 		OP_JAL: imm = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0}; // J-type
 		OP_LUI, OP_AUIPC: imm = {instr[31:12], {12{1'b0}}}; // U-type
 		default: imm = {{20{instr[31]}}, instr[31:20]}; // I-type, R-type
+	endcase
+	
+	// pcmux
+	case (opcode)
+		OP_JAL, OP_JALR: pcmux = MUX_PC_ALU;
+		default: pcmux = MUX_PC_NEXT;
+	endcase
+	
+	// regmux
+	case (opcode)
+		OP_JAL, OP_JALR: regmux = MUX_REG_WRITE_PC;
+		default: regmux = MUX_REG_WRITE_ALU;
 	endcase
 	
 	// alumux1

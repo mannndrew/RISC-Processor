@@ -29,15 +29,19 @@ module SingleCycle
 //);
 
 wire [31:0] pc_in;
+wire [31:0] pc_next;
 
 wire [31:0] dec_imm;
 wire [4:0] dec_rs1;
 wire [4:0] dec_rs2;
+wire dec_pcmux;
+wire dec_regmux;
 wire dec_alumux1;
 wire dec_alumux2;
 wire [3:0] dec_aluop;
 wire [4:0] dec_rd;
 
+wire [31:0] reg_in;
 wire [31:0] reg_rs1;
 wire [31:0] reg_rs2;
 
@@ -45,13 +49,14 @@ wire [31:0] alu_dataS1;
 wire [31:0] alu_dataS2;
 wire [31:0] alu_result;
 
-assign pc_in = 3'b100;
+assign pc_in = (dec_pcmux) ? alu_result : pc_next;
 
 pccounter PC
 (
 	.clk(clk),
 	.rst(rst),
 	.pc_in(pc_in),
+	.pc_next(pc_next),
 	.pc_out(pc_address)
 );
 
@@ -64,18 +69,22 @@ decoder DEC
 	.imm(dec_imm),
 	.rs1(dec_rs1),
 	.rs2(dec_rs2),
+	.pcmux(dec_pcmux),
+	.regmux(dec_regmux),
 	.alumux1(dec_alumux1),
 	.alumux2(dec_alumux2),
 	.aluop(dec_aluop),
 	.rd(dec_rd)
 );
 
+assign reg_in = (dec_regmux) ? pc_next : alu_result;
+
 regfile REG
 (
 	// Inputs
 	.clk(clk),
 	.write_addr(dec_rd),
-	.write_data(alu_result),
+	.write_data(reg_in),
 	.read_addr_1(dec_rs1),
 	.read_addr_2(dec_rs2),
 	
