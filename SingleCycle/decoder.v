@@ -37,6 +37,12 @@ parameter FUNC_SRL_SRA  = 3'b101;
 parameter FUNC_OR  = 3'b110;
 parameter FUNC_AND  = 3'b111;
 
+parameter FUNC_LB  = 3'b000;
+parameter FUNC_LH  = 3'b001;
+parameter FUNC_LW  = 3'b010;
+parameter FUNC_LBU  = 3'b100;
+parameter FUNC_LHU  = 3'b101;
+
 parameter MUX_ALU_S1_RS1 = 1'b0;
 parameter MUX_ALU_S1_PC = 1'b1;
 
