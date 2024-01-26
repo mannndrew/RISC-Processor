@@ -44,6 +44,8 @@ module data_memory (
 	clock_b,
 	data_a,
 	data_b,
+	enable_a,
+	enable_b,
 	wren_a,
 	wren_b,
 	q_a,
@@ -55,6 +57,8 @@ module data_memory (
 	input	  clock_b;
 	input	[31:0]  data_a;
 	input	[31:0]  data_b;
+	input	  enable_a;
+	input	  enable_b;
 	input	  wren_a;
 	input	  wren_b;
 	output	[31:0]  q_a;
@@ -63,6 +67,8 @@ module data_memory (
 // synopsys translate_off
 `endif
 	tri1	  clock_a;
+	tri1	  enable_a;
+	tri1	  enable_b;
 	tri0	  wren_a;
 	tri0	  wren_b;
 `ifndef ALTERA_RESERVED_QIS
@@ -79,6 +85,8 @@ module data_memory (
 				.address_b (address_b),
 				.clock0 (clock_a),
 				.clock1 (clock_b),
+				.clocken0 (enable_a),
+				.clocken1 (enable_b),
 				.data_a (data_a),
 				.data_b (data_b),
 				.wren_a (wren_a),
@@ -91,8 +99,6 @@ module data_memory (
 				.addressstall_b (1'b0),
 				.byteena_a (1'b1),
 				.byteena_b (1'b1),
-				.clocken0 (1'b1),
-				.clocken1 (1'b1),
 				.clocken2 (1'b1),
 				.clocken3 (1'b1),
 				.eccstatus (),
@@ -100,8 +106,8 @@ module data_memory (
 				.rden_b (1'b1));
 	defparam
 		altsyncram_component.address_reg_b = "CLOCK1",
-		altsyncram_component.clock_enable_input_a = "BYPASS",
-		altsyncram_component.clock_enable_input_b = "BYPASS",
+		altsyncram_component.clock_enable_input_a = "NORMAL",
+		altsyncram_component.clock_enable_input_b = "NORMAL",
 		altsyncram_component.clock_enable_output_a = "BYPASS",
 		altsyncram_component.clock_enable_output_b = "BYPASS",
 		altsyncram_component.indata_reg_b = "CLOCK1",
@@ -140,10 +146,10 @@ endmodule
 // Retrieval info: PRIVATE: BYTE_ENABLE_B NUMERIC "0"
 // Retrieval info: PRIVATE: BYTE_SIZE NUMERIC "8"
 // Retrieval info: PRIVATE: BlankMemory NUMERIC "1"
-// Retrieval info: PRIVATE: CLOCK_ENABLE_INPUT_A NUMERIC "0"
-// Retrieval info: PRIVATE: CLOCK_ENABLE_INPUT_B NUMERIC "0"
-// Retrieval info: PRIVATE: CLOCK_ENABLE_OUTPUT_A NUMERIC "0"
-// Retrieval info: PRIVATE: CLOCK_ENABLE_OUTPUT_B NUMERIC "0"
+// Retrieval info: PRIVATE: CLOCK_ENABLE_INPUT_A NUMERIC "1"
+// Retrieval info: PRIVATE: CLOCK_ENABLE_INPUT_B NUMERIC "1"
+// Retrieval info: PRIVATE: CLOCK_ENABLE_OUTPUT_A NUMERIC "1"
+// Retrieval info: PRIVATE: CLOCK_ENABLE_OUTPUT_B NUMERIC "1"
 // Retrieval info: PRIVATE: CLRdata NUMERIC "0"
 // Retrieval info: PRIVATE: CLRq NUMERIC "0"
 // Retrieval info: PRIVATE: CLRrdaddress NUMERIC "0"
@@ -189,12 +195,12 @@ endmodule
 // Retrieval info: PRIVATE: WRADDR_ACLR_B NUMERIC "0"
 // Retrieval info: PRIVATE: WRADDR_REG_B NUMERIC "1"
 // Retrieval info: PRIVATE: WRCTRL_ACLR_B NUMERIC "0"
-// Retrieval info: PRIVATE: enable NUMERIC "0"
+// Retrieval info: PRIVATE: enable NUMERIC "1"
 // Retrieval info: PRIVATE: rden NUMERIC "0"
 // Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 // Retrieval info: CONSTANT: ADDRESS_REG_B STRING "CLOCK1"
-// Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
-// Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_B STRING "BYPASS"
+// Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "NORMAL"
+// Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_B STRING "NORMAL"
 // Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_A STRING "BYPASS"
 // Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_B STRING "BYPASS"
 // Retrieval info: CONSTANT: INDATA_REG_B STRING "CLOCK1"
@@ -224,6 +230,8 @@ endmodule
 // Retrieval info: USED_PORT: clock_b 0 0 0 0 INPUT NODEFVAL "clock_b"
 // Retrieval info: USED_PORT: data_a 0 0 32 0 INPUT NODEFVAL "data_a[31..0]"
 // Retrieval info: USED_PORT: data_b 0 0 32 0 INPUT NODEFVAL "data_b[31..0]"
+// Retrieval info: USED_PORT: enable_a 0 0 0 0 INPUT VCC "enable_a"
+// Retrieval info: USED_PORT: enable_b 0 0 0 0 INPUT VCC "enable_b"
 // Retrieval info: USED_PORT: q_a 0 0 32 0 OUTPUT NODEFVAL "q_a[31..0]"
 // Retrieval info: USED_PORT: q_b 0 0 32 0 OUTPUT NODEFVAL "q_b[31..0]"
 // Retrieval info: USED_PORT: wren_a 0 0 0 0 INPUT GND "wren_a"
@@ -232,6 +240,8 @@ endmodule
 // Retrieval info: CONNECT: @address_b 0 0 8 0 address_b 0 0 8 0
 // Retrieval info: CONNECT: @clock0 0 0 0 0 clock_a 0 0 0 0
 // Retrieval info: CONNECT: @clock1 0 0 0 0 clock_b 0 0 0 0
+// Retrieval info: CONNECT: @clocken0 0 0 0 0 enable_a 0 0 0 0
+// Retrieval info: CONNECT: @clocken1 0 0 0 0 enable_b 0 0 0 0
 // Retrieval info: CONNECT: @data_a 0 0 32 0 data_a 0 0 32 0
 // Retrieval info: CONNECT: @data_b 0 0 32 0 data_b 0 0 32 0
 // Retrieval info: CONNECT: @wren_a 0 0 0 0 wren_a 0 0 0 0

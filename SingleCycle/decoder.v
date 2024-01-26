@@ -7,6 +7,8 @@ module decoder
 	output reg [31:0] imm,
 	output [4:0] rs1,
 	output [4:0] rs2,
+	output data_write_enable,
+	output data_read_enable,
 	output reg pcmux,
 	output reg regmux,
 	output reg alumux1,
@@ -62,6 +64,8 @@ wire [4:0] opcode = instr[6:2];
 wire [2:0] funct3 = instr[14:12];
 wire [6:0] funct7 = instr[31:25];
 
+assign data_write_enable = (opcode == OP_STORE);
+assign data_read_enable = (opcode == OP_LOAD || opcode == OP_STORE);
 assign rs1 = (opcode == OP_LUI) ? 5'b00000 : instr[19:15];
 assign rs2 = instr[24:20];
 assign branchop = {(opcode == OP_BRANCH), instr[14:12]};

@@ -35,6 +35,8 @@ wire branch;
 wire [31:0] dec_imm;
 wire [4:0] dec_rs1;
 wire [4:0] dec_rs2;
+wire dec_data_ena_write;
+wire dec_data_ena_read;
 wire dec_pcmux;
 wire dec_regmux;
 wire dec_alumux1;
@@ -50,6 +52,8 @@ wire [31:0] reg_rs2;
 wire [31:0] alu_dataS1;
 wire [31:0] alu_dataS2;
 wire [31:0] alu_result;
+
+wire [31:0] data_out;
 
 assign pc_in = (dec_pcmux || branch) ? alu_result : pc_next;
 
@@ -71,6 +75,8 @@ decoder decoder_unit
 	.imm(dec_imm),
 	.rs1(dec_rs1),
 	.rs2(dec_rs2),
+	.data_write_enable(dec_data_ena_write),
+	.data_read_enable(dec_data_ena_read),
 	.pcmux(dec_pcmux),
 	.regmux(dec_regmux),
 	.alumux1(dec_alumux1),
@@ -118,6 +124,25 @@ alu arithmetic_unit
 	// Outputs
 	.result(alu_result)
 );
+
+
+data_memory data_unit 
+(
+	// Write Port (Posedge Clock)
+//	.address_a(alu_result),
+//	.clock_a(clk),
+//	.data_a(reg_rs2),
+//	.enable_a(dec_data_ena_write),
+//	.wren_a(dec_data_ena_write),
+	
+	
+	// Read Port (Negedge Clock)
+	.address_b(alu_result),
+	.clock_b(~clk),
+	.enable_b(dec_data_ena_read),
+	.q_b(data_out)
+);
+
 
 assign alu_output = alu_result;
 
