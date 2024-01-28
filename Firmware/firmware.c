@@ -28,18 +28,46 @@
 // }
 #include <stdint.h>
 
-#define TEST     (*((volatile uint32_t *)0x40))
-int my_data_variable = 42;
+#define LED     (*((volatile uint32_t *)0x0))
 
-uint32_t add(uint32_t num)
+void wait3Seconds(void)
 {
-    uint32_t value = num;
-    value += 67;
-    value = value << 4;
-    return value;
+    __asm("counter: .word 30000000");
+    __asm("          LUI   a0, %hi(counter)"); // 2
+    __asm("          LW    a0, %lo(counter)(a0)"); // 2
+    
+
+    __asm("loop:                    ");
+    __asm("          ADDI  a0, a0, -1"); // 1
+    __asm("          BEQZ  a0, done"); // 1
+    __asm("          JAL   x0, loop"); // 2
+    __asm("done:                    "); // 4 Total * Counter
 }
 
-int main() {
-    uint32_t a = TEST;
-    return add(a);
+void main() {
+    
+    int i;
+    static const int arr[10] = {9, 28, 53, 88, 52, 9, 75, 6, 26, 7};
+    int maxNumber = arr[0];
+
+    wait3Seconds();
+
+    for(i = 1;i < 10; i++)
+    {
+       if(maxNumber < arr[i])
+           maxNumber = arr[i] ;
+    }
+
+    volatile char *tx1 = (volatile char *)0x40002000;
+    const char *result = "The largest element is ";
+    while(*result)
+    {
+        *tx1 = *result;
+        result++;
+    }
+
+
+    *tx1 = maxNumber;
+
+    return;
 }

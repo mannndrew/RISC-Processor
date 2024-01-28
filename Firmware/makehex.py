@@ -47,7 +47,6 @@ for byte in binary_data:
     byte = str.upper(byte)
     memory.append(byte)
 
-print(memory)
 
 # Close the binary file
 binary_file.close()

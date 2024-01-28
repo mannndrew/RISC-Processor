@@ -3,7 +3,7 @@
 # Compiler and Flags
 PROGRAM_NAME = firmware
 TOOLCHAIN = riscv64-unknown-elf-
-CFLAGS = -march=rv32i -mabi=ilp32 -Os -ffreestanding -nostdlib --std=gnu99
+CFLAGS = -march=rv32i -mabi=ilp32 -ffreestanding -Os -nostdlib --std=gnu99
 LDFLAGS = -Wl,-Bstatic,-T,$(PROGRAM_NAME).lds,-Map,firmware.map,--strip-debug -lgcc
 
 # Source files
