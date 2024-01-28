@@ -1,12 +1,12 @@
 /*<simulation_settings>
-<ftestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off SingleCycle -c SingleCycle --vector_source="C:/Users/mannn/Documents/GitHub/RISC-Processor/SingleCycle/Waveforms/BEQ.vwf" --testbench_file="C:/Users/mannn/Documents/GitHub/RISC-Processor/SingleCycle/simulation/qsim/BEQ.vwf.vt"</ftestbench_cmd>
+<ftestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off SingleCycle -c SingleCycle --vector_source="C:/Users/mannn/Documents/GitHub/RISC-Processor/SingleCycle/Waveforms/LOAD.vwf" --testbench_file="C:/Users/mannn/Documents/GitHub/RISC-Processor/SingleCycle/simulation/qsim/LOAD.vwf.vt"</ftestbench_cmd>
 <ttestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off SingleCycle -c SingleCycle --vector_source="C:/Users/mannn/Documents/GitHub/RISC-Processor/SingleCycle/Waveform.vwf" --testbench_file="C:/Users/mannn/Documents/GitHub/RISC-Processor/SingleCycle/simulation/qsim/Waveform.vwf.vt"</ttestbench_cmd>
 <fnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=on --flatten_buses=off --tool=modelsim_oem --format=verilog --output_directory="C:/Users/mannn/Documents/GitHub/RISC-Processor/SingleCycle/simulation/qsim/" SingleCycle -c SingleCycle</fnetlist_cmd>
 <tnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=off --flatten_buses=off --timescale=1ps --tool=modelsim_oem --format=verilog --output_directory="C:/Users/mannn/Documents/GitHub/RISC-Processor/SingleCycle/simulation/qsim/" SingleCycle -c SingleCycle</tnetlist_cmd>
 <modelsim_script>onerror {exit -code 1}
 vlib work
 vlog -work work SingleCycle.vo
-vlog -work work BEQ.vwf.vt
+vlog -work work LOAD.vwf.vt
 vsim -voptargs=+acc -c -t 1ps -L fiftyfivenm_ver -L altera_ver -L altera_mf_ver -L 220model_ver -L sgate_ver -L altera_lnsim_ver work.SingleCycle_vlg_vec_tst
 vcd file -direction SingleCycle.msim.vcd
 vcd add -internal SingleCycle_vlg_vec_tst/*
@@ -20,11 +20,6 @@ proc simTimestamp {} {
 after 2500 simTimestamp
 run -all
 quit -f
-
-
-
-
-
 
 
 
@@ -50,11 +45,6 @@ proc simTimestamp {} {
 after 2500 simTimestamp
 run -all
 quit -f
-
-
-
-
-
 
 
 
@@ -1447,11 +1437,13 @@ TRANSITION_LIST("clk")
 		REPEAT = 1;
 		LEVEL 0 FOR 300.0;
 		LEVEL 1 FOR 100.0;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 100.0;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 100.0;
-		LEVEL 0 FOR 200.0;
+		NODE
+		{
+			REPEAT = 1;
+			LEVEL 0 FOR 100.0;
+			LEVEL 1 FOR 100.0;
+		}
+		LEVEL 0 FOR 400.0;
 	}
 }
 
@@ -1487,9 +1479,7 @@ TRANSITION_LIST("instr[28]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 500.0;
-		LEVEL 1 FOR 200.0;
-		LEVEL 0 FOR 300.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1552,9 +1542,7 @@ TRANSITION_LIST("instr[21]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 500.0;
-		LEVEL 1 FOR 200.0;
-		LEVEL 0 FOR 300.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1608,9 +1596,7 @@ TRANSITION_LIST("instr[15]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 500.0;
-		LEVEL 1 FOR 200.0;
-		LEVEL 0 FOR 300.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1637,9 +1623,7 @@ TRANSITION_LIST("instr[12]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 400.0;
-		LEVEL 0 FOR 500.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1675,9 +1659,7 @@ TRANSITION_LIST("instr[8]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 300.0;
-		LEVEL 1 FOR 200.0;
-		LEVEL 0 FOR 500.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1686,8 +1668,7 @@ TRANSITION_LIST("instr[7]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 200.0;
+		LEVEL 1 FOR 300.0;
 		LEVEL 0 FOR 700.0;
 	}
 }
@@ -1697,9 +1678,7 @@ TRANSITION_LIST("instr[6]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 500.0;
-		LEVEL 1 FOR 200.0;
-		LEVEL 0 FOR 300.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1708,9 +1687,7 @@ TRANSITION_LIST("instr[5]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 600.0;
-		LEVEL 0 FOR 300.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1719,9 +1696,7 @@ TRANSITION_LIST("instr[4]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 400.0;
-		LEVEL 0 FOR 500.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1739,9 +1714,7 @@ TRANSITION_LIST("instr[2]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 400.0;
-		LEVEL 0 FOR 500.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -1750,9 +1723,8 @@ TRANSITION_LIST("instr[1]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 600.0;
-		LEVEL 0 FOR 300.0;
+		LEVEL 1 FOR 300.0;
+		LEVEL 0 FOR 700.0;
 	}
 }
 
@@ -1761,9 +1733,8 @@ TRANSITION_LIST("instr[0]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 600.0;
-		LEVEL 0 FOR 300.0;
+		LEVEL 1 FOR 300.0;
+		LEVEL 0 FOR 700.0;
 	}
 }
 

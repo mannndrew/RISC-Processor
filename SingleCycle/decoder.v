@@ -10,9 +10,11 @@ module decoder
 	output data_write_enable,
 	output data_read_enable,
 	output reg pcmux,
-	output reg regmux,
+	output reg [1:0] regmux,
 	output reg alumux1,
 	output reg alumux2,
+	output [1:0] writeop,
+	output [2:0] readop,
 	output [4:0] branchop,
 	output reg [3:0] aluop,
 	output reg [4:0] rd
@@ -60,8 +62,9 @@ parameter ALUOP_SLL  = 4'b0111;
 parameter ALUOP_SRL  = 4'b1000;
 parameter ALUOP_SRA  = 4'b1001;
 
-parameter MUX_REG_WRITE_ALU = 1'b0;
-parameter MUX_REG_WRITE_PC = 1'b1;
+parameter MUX_REG_WRITE_ALU = 2'b00;
+parameter MUX_REG_WRITE_PC = 2'b01;
+parameter MUX_REG_WRITE_MEM = 2'b10;
 
 parameter MUX_PC_NEXT = 1'b0;
 parameter MUX_PC_ALU = 1'b1;
@@ -72,6 +75,8 @@ wire [6:0] funct7 = instr[31:25];
 
 assign data_write_enable = (opcode == OP_STORE);
 assign data_read_enable = (opcode == OP_LOAD || opcode == OP_STORE);
+assign writeop = instr[13:12];
+assign readop = instr[14:12];
 assign rs1 = (opcode == OP_LUI) ? 5'b00000 : instr[19:15];
 assign rs2 = instr[24:20];
 assign branchop = {(opcode == OP_BRANCH), instr[14:12]};
@@ -99,6 +104,7 @@ always @(*) begin
 	// regmux
 	case (opcode)
 		OP_JAL, OP_JALR: regmux = MUX_REG_WRITE_PC;
+		OP_LOAD: regmux = MUX_REG_WRITE_MEM;
 		default: regmux = MUX_REG_WRITE_ALU;
 	endcase
 	

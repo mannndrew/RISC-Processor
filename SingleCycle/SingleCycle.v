@@ -38,9 +38,11 @@ wire [4:0] dec_rs2;
 wire dec_data_ena_write;
 wire dec_data_ena_read;
 wire dec_pcmux;
-wire dec_regmux;
+wire [1:0] dec_regmux;
 wire dec_alumux1;
 wire dec_alumux2;
+wire [1:0] dec_writeop;
+wire [2:0] dec_readop;
 wire [3:0] dec_branchop;
 wire [3:0] dec_aluop;
 wire [4:0] dec_rd;
@@ -53,7 +55,9 @@ wire [31:0] alu_dataS1;
 wire [31:0] alu_dataS2;
 wire [31:0] alu_result;
 
-wire [31:0] data_out;
+wire [31:0] mem_in;
+wire [31:0] mem_word;
+wire [31:0] mem_out;
 
 assign pc_in = (dec_pcmux || branch) ? alu_result : pc_next;
 
@@ -81,6 +85,8 @@ decoder decoder_unit
 	.regmux(dec_regmux),
 	.alumux1(dec_alumux1),
 	.alumux2(dec_alumux2),
+	.writeop(dec_writeop),
+	.readop(dec_readop),
 	.branchop(dec_branchop),
 	.aluop(dec_aluop),
 	.rd(dec_rd)
@@ -94,7 +100,10 @@ branch branch_unit
 	.branch(branch)
 );
 
-assign reg_in = (dec_regmux) ? pc_next : alu_result;
+assign reg_in = 	(dec_regmux == 2'b00) ? alu_result :
+						(dec_regmux == 2'b01) ? pc_next : mem_out;
+						
+
 
 regfile register_unit
 (
@@ -125,22 +134,38 @@ alu arithmetic_unit
 	.result(alu_result)
 );
 
+data_write_mux write_mux
+(
+	.data_old(mem_word),
+	.data_new(reg_rs2),
+	.write_addr(alu_result[1:0]),
+	.write_op(dec_writeop),
+	.data_out(mem_in)
+);
 
 data_memory data_unit 
 (
 	// Write Port (Posedge Clock)
-//	.address_a(alu_result),
-//	.clock_a(clk),
-//	.data_a(reg_rs2),
-//	.enable_a(dec_data_ena_write),
-//	.wren_a(dec_data_ena_write),
+	.address_a(alu_result[31:2]),
+	.clock_a(clk),
+	.data_a(mem_in),
+	.enable_a(dec_data_ena_write),
+	.wren_a(dec_data_ena_write),
 	
 	
 	// Read Port (Negedge Clock)
 	.address_b(alu_result),
 	.clock_b(~clk),
 	.enable_b(dec_data_ena_read),
-	.q_b(data_out)
+	.q_b(mem_word)
+);
+
+data_read_mux read_mux
+(
+	.data_in(mem_word),
+	.read_addr(alu_result[1:0]),
+	.read_op(dec_readop),
+	.data_out(mem_out)
 );
 
 
