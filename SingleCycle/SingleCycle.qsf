@@ -1,3 +1,4 @@
+set_global_assignment -name FITTER_EFFORT FAST_FIT
 # -------------------------------------------------------------------------- #
 #
 # Copyright (C) 2023  Intel Corporation. All rights reserved.
@@ -37,8 +38,8 @@
 # -------------------------------------------------------------------------- #
 
 # ADDED OPTIMIZATIONS
-set_global_assignment -name FITTER_EFFORT FAST_FIT
-set_global_assignment -name SYNTHESIS_EFFORT FAST
+# set_global_assignment -name FITTER_EFFORT FAST_FIT
+# set_global_assignment -name SYNTHESIS_EFFORT FAST
 
 set_global_assignment -name FAMILY "MAX 10"
 set_global_assignment -name DEVICE 10M50DAF484C7G
@@ -63,19 +64,21 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name ENABLE_OCT_DONE OFF
 set_global_assignment -name EXTERNAL_FLASH_FALLBACK_ADDRESS 00000000
 set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
-set_global_assignment -name INTERNAL_FLASH_UPDATE_MODE "SINGLE IMAGE"
+set_global_assignment -name INTERNAL_FLASH_UPDATE_MODE "SINGLE IMAGE WITH ERAM"
 set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
 set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+set_location_assignment PIN_P11 -to clk
+set_location_assignment PIN_B8 -to rst
+set_global_assignment -name VERILOG_FILE slow.v
 set_global_assignment -name VERILOG_FILE data_write_mux.v
 set_global_assignment -name VERILOG_FILE data_read_mux.v
 set_global_assignment -name VERILOG_FILE data_memory.v
 set_global_assignment -name VERILOG_FILE branch.v
 set_global_assignment -name VERILOG_FILE regfile.v
 set_global_assignment -name VERILOG_FILE alu.v
-set_global_assignment -name VERILOG_FILE debounce.v
 set_global_assignment -name VERILOG_FILE instruction_memory.v
 set_global_assignment -name VERILOG_FILE pccounter.v
 set_global_assignment -name VERILOG_FILE SingleCycle.v
@@ -90,5 +93,16 @@ set_global_assignment -name VECTOR_WAVEFORM_FILE Waveforms/JAL.vwf
 set_global_assignment -name VECTOR_WAVEFORM_FILE Waveforms/JALR.vwf
 set_global_assignment -name VECTOR_WAVEFORM_FILE Waveforms/BEQ.vwf
 set_global_assignment -name VECTOR_WAVEFORM_FILE Waveforms/LOAD.vwf
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name VECTOR_WAVEFORM_FILE Waveforms/STORE.vwf
+set_location_assignment PIN_C10 -to sw
+set_location_assignment PIN_A8 -to led[0]
+set_location_assignment PIN_A9 -to led[1]
+set_location_assignment PIN_A10 -to led[2]
+set_location_assignment PIN_B10 -to led[3]
+set_location_assignment PIN_D13 -to led[4]
+set_location_assignment PIN_C13 -to led[5]
+set_location_assignment PIN_E14 -to led[6]
+set_location_assignment PIN_D14 -to led[7]
+set_location_assignment PIN_A11 -to led[8]
+set_location_assignment PIN_B11 -to led[9]
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

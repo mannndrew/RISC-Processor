@@ -1,32 +1,27 @@
 module SingleCycle
 (
 	input clk,
+	input sw,
 	input rst,
-	input [31:0] instr,
-	//input button,
-	output [31:0] pc_address,
-	output [31:0] alu_output,
-	output [31:0] reg1_output
+	output [9:0] led
 );
 
-//wire debounced;
-//wire [31:0] pc_address;
-//wire [31:0] instr;
+wire clk_slow;
+wire [31:0] pc_address;
+wire [31:0] instr;
 
-//debounce DEB
-//(
-//	.clk(clk),
-//	.rst(rst),
-//	.button(~button),
-//	.debounced(debounced)
-//);
+slow DEB
+(
+	.clk(clk & sw),
+	.slow(clk_slow)
+);
 
-//instruction_memory BR1
-//(
-//	.address(pc_address[9:2]),
-//	.clock(debounced),
-//	.q(instr)
-//);
+instruction_memory BR1
+(
+	.address(pc_address[31:2]),
+	.clock(~clk_slow),
+	.q(instr)
+);
 
 wire [31:0] pc_in;
 wire [31:0] pc_next;
@@ -63,7 +58,7 @@ assign pc_in = (dec_pcmux || branch) ? alu_result : pc_next;
 
 pccounter pgcounter_unit
 (
-	.clk(clk),
+	.clk(clk_slow),
 	.rst(rst),
 	.pc_in(pc_in),
 	.pc_next(pc_next),
@@ -108,7 +103,7 @@ assign reg_in = 	(dec_regmux == 2'b00) ? alu_result :
 regfile register_unit
 (
 	// Inputs
-	.clk(clk),
+	.clk(clk_slow),
 	.write_addr(dec_rd),
 	.write_data(reg_in),
 	.read_addr_1(dec_rs1),
@@ -116,8 +111,7 @@ regfile register_unit
 	
 	// Outputs
 	.read_data_1(reg_rs1),
-	.read_data_2(reg_rs2),
-	.reg1_data(reg1_output)
+	.read_data_2(reg_rs2)
 );
 
 assign alu_dataS1 = (dec_alumux1) ? pc_address : reg_rs1;
@@ -147,15 +141,15 @@ data_memory data_unit
 (
 	// Write Port (Posedge Clock)
 	.address_a(alu_result[31:2]),
-	.clock_a(clk),
+	.clock_a(clk_slow),
 	.data_a(mem_in),
 	.enable_a(dec_data_ena_write),
 	.wren_a(dec_data_ena_write),
 	
 	
 	// Read Port (Negedge Clock)
-	.address_b(alu_result),
-	.clock_b(~clk),
+	.address_b(alu_result[31:2]),
+	.clock_b(~clk_slow),
 	.enable_b(dec_data_ena_read),
 	.q_b(mem_word)
 );
@@ -168,7 +162,20 @@ data_read_mux read_mux
 	.data_out(mem_out)
 );
 
+reg test;
 
-assign alu_output = alu_result;
+always @(posedge clk_slow, negedge rst) begin
+	if (rst == 1'b0)
+		test <= 1'b0;
+	else if (dec_data_ena_write)
+		test <= mem_in[0];
+	else
+		test <= test;
+end
+
+assign led[7:0] = pc_address[9:2];
+assign led[8] = test;
+assign led[9] = clk_slow;
+
 
 endmodule

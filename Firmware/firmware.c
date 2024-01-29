@@ -30,15 +30,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define LED     (*((volatile uint32_t *)0x800))
-
-volatile uint32_t word = 10;
+#define LED     (*((volatile uint32_t *)0x10))
 
 void wait3Seconds(void)
 {
-    __asm("          LW    a0, word"); // 2
+    __asm("          LUI  a0, 0x2000"); // 2
+    __asm("loop:                     "); // 2
     __asm("          ADDI  a0, a0, -1"); // 1
-    __asm("          BEQZ  a0, 4"); // 1
+    __asm("          BNEZ  a0, loop"); // 1
     return;
 }
 

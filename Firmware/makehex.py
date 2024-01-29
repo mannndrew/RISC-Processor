@@ -117,7 +117,7 @@ for address in range(data_depth):
 
         else:
             word = "00" + word
-
+    address += data_origin
     output_file.write(f"{address:02x}: {word};\n")
 
 # Write the MIF footer
