@@ -10,16 +10,18 @@ wire clk_slow;
 wire [31:0] pc_address;
 wire [31:0] instr;
 
-slow DEB
-(
-	.clk(clk & sw),
-	.slow(clk_slow)
-);
+//slow DEB
+//(
+//	.clk(clk & sw),
+//	.slow(clk_slow)
+//);
+
+assign clk_slow = clk & sw;
 
 instruction_memory BR1
 (
-	.address(pc_address[31:2]),
-	.clock(~clk_slow),
+	.address(pc_in[31:2]),
+	.clock(clk_slow),
 	.q(instr)
 );
 
